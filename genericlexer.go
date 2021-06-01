@@ -143,7 +143,7 @@ func (l *Lexer) PeekItem() Item {
 
 func lexNumber(l *Lexer) stateFn {
 	// Optional leading sign.
-	l.accept("+-")
+	// l.accept("+-")
 	// Is it hex?
 	digits := "0123456789"
 	if l.accept("0") && l.accept("xX") {
@@ -179,10 +179,11 @@ func lexWord(l *Lexer) stateFn {
 }
 
 func lexLetter(l *Lexer) stateFn {
-	l.accept("abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ")
-	if unicode.IsLetter(l.peek()) {
-		return lexWord
-	}
+	// l.accept("abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ")
+	// if unicode.IsLetter(l.peek()) {
+	// 	fmt.Println("workd)))))")
+	// 	return lexWord
+	// }
 	l.emit(ItemLetter)
 	return lexD
 }
@@ -215,6 +216,9 @@ func lexD(l *Lexer) stateFn {
 		case unicode.IsLetter(r):
 			return lexLetter
 		case r == '-' || r == '+':
+			return lexNumber
+		case r == '.':
+			l.backup()
 			return lexNumber
 		case unicode.IsNumber(r):
 			return lexNumber
